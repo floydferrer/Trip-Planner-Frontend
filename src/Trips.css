@@ -1,0 +1,10 @@
+.card {
+    transition: background-color 300ms ease-in-out;
+    font-family: "Josefin Sans";
+    font-size: 30px;
+}
+
+.card:hover{
+    cursor: pointer;
+    background-color: rgb(0, 0, 0, 0.5)!important;
+}

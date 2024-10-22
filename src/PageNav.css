@@ -1,0 +1,17 @@
+.active {
+    font-weight: bolder;
+}
+
+.navbar-toggler,
+.navbar-toggler:focus,
+.navbar-toggler:active,
+.navbar-toggler-icon:focus {
+    outline: none!important;
+    box-shadow: none!important;
+    border: none!important;
+}
+
+li {
+    font-family: "Josefin Sans";
+    font-size: 30px;
+}

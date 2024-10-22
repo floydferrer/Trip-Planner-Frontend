@@ -1,0 +1,12 @@
+.trip-form-label{
+    font-family: "Josefin Sans";
+    font-size: 25px;
+}
+
+.pac-target-input {
+    height: 40px;
+    width: 280px;
+    margin-top: 1rem;
+    border-radius: 5px;
+    font-size: 1.3rem;
+}
