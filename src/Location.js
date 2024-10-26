@@ -22,7 +22,17 @@ import './Location.css'
 
 const Location = ({Places, trips, setTrips, addTrip, currUser, setOnHomepage}) => {
     setOnHomepage(false);
-    const position = ( {lat: 33.836160, lng: -118.159530} )
+    const position = {};
+    navigator.geolocation.getCurrentPosition((location) => {
+        position.lat = location.coords.latitude;
+        position.lng = location.coords.longitude;
+      });
+     
+    if (position.lat === undefined && position.lng === undefined) {
+        position.lat = 38.500000;
+        position.lng = -98.000000;
+    } 
+ 
     const navigate = useNavigate();
     
     const [selectedPlace, setSelectedPlace] = useState(null);
@@ -37,6 +47,17 @@ const Location = ({Places, trips, setTrips, addTrip, currUser, setOnHomepage}) =
     
     const [errorHandler, setErrorHandler] = useState('')
 
+    useEffect(() => {
+        if(!selectedPlace) return;
+        if(selectedPlace.formatted_address === undefined || location1 && selectedPlace.formatted_address === location1.address) return;
+        if(!location1) {
+            setLocation1({name: selectedPlace.name, address: selectedPlace.formatted_address, lat: selectedPlace.geometry.location.lat(), lng: selectedPlace.geometry.location.lng()})
+        } else if (selectedPlace.name !== '') {
+            setLocation2({name: selectedPlace.name, address: selectedPlace.formatted_address, lat: selectedPlace.geometry.location.lat(), lng: selectedPlace.geometry.location.lng()})
+        }
+        
+    }, [selectedPlace])
+    
     useEffect(() => {
         if(!selectedPlace) return;
         if(selectedPlace.formatted_address === undefined || location1 && selectedPlace.formatted_address === location1.address) return;
@@ -93,7 +114,7 @@ const Location = ({Places, trips, setTrips, addTrip, currUser, setOnHomepage}) =
                 {(!selectedPlace || selectedPlace && selectedPlace.formatted_address === undefined) && !location1 && <p>Departing from:</p>}
                 {location1 && !location2 && <p>Arriving at:</p>}
                 <Map 
-                    defaultZoom={14} 
+                    defaultZoom={8} 
                     defaultCenter={position} 
                     mapId={process.env.REACT_APP_MAP_ID}
                     fullscreenControl={false}
@@ -120,29 +141,28 @@ const Location = ({Places, trips, setTrips, addTrip, currUser, setOnHomepage}) =
                 { !location1 && !location2 && trip.length > 0 && 
                     <div>
                         <Form className="col-md-4 mt-3 py-4 px-4 container-fluid rounded" onSubmit={handleSubmit}>
-                        <FormGroup>
-                            <Label for="tripName" className="fw-bold trip-form-label">
-                            Enter Trip Name:
-                            </Label>
-                            <Input
-                            id="tripName"
-                            name="tripName"
-                            value={formData.tripName}
-                            onChange={handleChange}
-                            type="text"
-                            />
-                        </FormGroup>
-                        {errorHandler && <div>
-                            <Alert className='mt-3 mb-1' color='danger'>
-                                {errorHandler}
-                            </Alert>
-                        </div>}
-                        <div className="d-grid gap-2">
-                            <Button color="primary">
-                                Finalize Trip
-                            </Button>
-                        </div>
-                        
+                            <FormGroup>
+                                <Label for="tripName" className="fw-bold trip-form-label">
+                                Enter Trip Name:
+                                </Label>
+                                <Input
+                                id="tripName"
+                                name="tripName"
+                                value={formData.tripName}
+                                onChange={handleChange}
+                                type="text"
+                                />
+                            </FormGroup>
+                            {errorHandler && <div>
+                                <Alert className='mt-3 mb-1' color='danger'>
+                                    {errorHandler}
+                                </Alert>
+                            </div>}
+                            <div className="d-grid gap-2">
+                                <Button color="primary">
+                                    Finalize Trip
+                                </Button>
+                            </div>    
                         </Form>
                     </div>}
             </APIProvider>
